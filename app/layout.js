@@ -47,7 +47,13 @@ export const metadata = {
     description: 'Track and manage your missed prayers (Qada Salah) with ease. Stay organized in making up your missed daily prayers.',
     images: [
       {
-        url: '/android-chrome-512x512.png',
+        url: '/logo/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'قضاء الصلوات - Qada Prayer Tracker',
+      },
+      {
+        url: '/logo/logo.svg',
         width: 512,
         height: 512,
         alt: 'قضاء الصلوات - Qada Prayer Tracker',
@@ -58,7 +64,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'قضاء الصلوات - Qada Prayer Tracker',
     description: 'Track and manage your missed prayers (Qada Salah) with ease. Stay organized in making up your missed daily prayers.',
-    images: ['/android-chrome-512x512.png'],
+    images: ['/logo/logo.png'],
   },
   verification: {
     // Add your verification codes here when available
@@ -85,12 +91,10 @@ export const metadata = {
       { url: '/logo/logo.svg', type: 'image/svg+xml' },
       // Fallback PNG/ICO favicons for legacy browsers
       { url: '/favicon.ico', sizes: '32x32' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo/logo.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-      { url: '/apple-touch-icon-152x152.png', sizes: '152x152', type: 'image/png' },
+      { url: '/logo/logo.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
       {
@@ -122,14 +126,11 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
         
-        {/* Apple touch icons */}
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        
-        {/* Android/Chrome icons */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+        {/* Apple/Android icons using new logo */}
+        <link rel="apple-touch-icon" href="/logo/logo.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo/logo.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/logo/logo.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/logo/logo.png" />
         
         {/* Windows tiles */}
         <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
