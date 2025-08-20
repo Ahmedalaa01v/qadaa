@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -31,28 +31,53 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 export default function Navbar() {
   const [progressDialogOpen, setProgressDialogOpen] = useState(false)
   const [user, setUser] = useState(null)
+  const prevUserRef = useRef(null)
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const currentUser = await validateUser()
         setUser(currentUser)
+        prevUserRef.current = currentUser
       } catch (error) {
         setUser(null)
+        prevUserRef.current = null
       }
     }
 
     getUser()
 
     // Listen for auth changes
+    // One-time reload guard
+    const RELOAD_FLAG = 'auth:reloaded'
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       // Update local state
       setUser(session?.user || null)
 
-      // Force a full reload on sign-in/sign-up to mirror logout behavior
-      if ((event === 'SIGNED_IN' || event === 'SIGNED_UP') && typeof window !== 'undefined') {
-        setTimeout(() => window.location.reload(), 50)
+      if (typeof window === 'undefined') return
+
+      // Clear the reload flag on sign-out only
+      if (event === 'SIGNED_OUT') {
+        try { sessionStorage.removeItem(RELOAD_FLAG) } catch {}
       }
+
+      const hasSession = Boolean(session?.user)
+      const prevUser = prevUserRef.current
+      const isAuthTransitionToSignedIn = (event === 'SIGNED_IN' || event === 'SIGNED_UP') && hasSession && !prevUser
+
+      if (isAuthTransitionToSignedIn) {
+        try {
+          const alreadyReloaded = sessionStorage.getItem(RELOAD_FLAG) === '1'
+          if (!alreadyReloaded) {
+            sessionStorage.setItem(RELOAD_FLAG, '1')
+            setTimeout(() => window.location.reload(), 50)
+          }
+        } catch {}
+      }
+
+      // Update previous user reference after handling logic
+      prevUserRef.current = session?.user || null
     })
 
     return () => subscription.unsubscribe()
