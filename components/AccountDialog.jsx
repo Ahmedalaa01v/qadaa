@@ -259,24 +259,23 @@ export default function AccountDialog() {
 
   const handleSignOut = async () => {
     setLoading(true)
-    
-    
     try {
-      const { error } = await supabase.auth.signOut()
-      
-      if (error) {
-        throw error
-      }
-      
-      // Close the dialog on successful logout
+      // Clear session on server and client
+      const { error } = await supabase.auth.signOut({ scope: 'global' })
+      if (error) throw error
+
+      // Close and reset UI state
       setOpen(false)
-      
-      // Refresh the page to reset state
-      window.location.reload()
+      resetForm()
+
+      // Force session re-check without full reload to avoid double-clicks
+      await supabase.auth.getSession()
+      // Soft refresh for safety
+      if (typeof window !== 'undefined') {
+        setTimeout(() => window.location.reload(), 50)
+      }
     } catch (error) {
       toast.error('حدث خطأ أثناء تسجيل الخروج')
-      
-      // Only log in development
       if (process.env.NODE_ENV === 'development') {
         console.error('Sign out error:', error)
       }
@@ -291,7 +290,7 @@ export default function AccountDialog() {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="ghost" size="sm" className="gap-2">
-            <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center uppercase text-xs">
+            <div className="w-6 h-6 rounded-full bg-primary/10 text-primary/90 flex items-center justify-center uppercase text-xs">
               {emailInitial}
             </div>
           </Button>
