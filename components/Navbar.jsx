@@ -14,7 +14,17 @@ import { BarChart3 } from 'lucide-react'
 import { supabase, validateUser } from '@/lib/supabase'
 import Settings from '@/components/Settings'
 import AccountDialog from '@/components/AccountDialog'
-import Progress from '@/components/Progress'
+import dynamic from 'next/dynamic'
+import LoadingSpinner from '@/components/ui/loading-spinner'
+
+const Progress = dynamic(() => import('@/components/Progress'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-6">
+      <LoadingSpinner />
+    </div>
+  )
+})
 import Link from 'next/link'
 import { ScrollArea } from '@/components/ui/scroll-area'
 

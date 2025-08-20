@@ -478,7 +478,7 @@ export default function Settings() {
               size="sm"
             >
               {loading ? <LoadingSpinner size="small" /> : <Save className="w-4 h-4" />}
-              {loading ? 'جارٍ الحفظ...' : 'حفظ الإعدادات'}
+              {loading ? 'جاري الحفظ...' : 'حفظ الإعدادات'}
             </Button>
           </div>
         </PopoverContent>
@@ -528,7 +528,7 @@ export default function Settings() {
             </Button>
             <Button onClick={() => confirmSave()} disabled={loading} className="gap-2">
               {loading && <LoadingSpinner size="small" />}
-              {loading ? 'جارٍ الحفظ...' : 'تأكيد'}
+              {loading ? 'جاري الحفظ...' : 'تأكيد'}
             </Button>
           </DialogFooter>
         </DialogContent>

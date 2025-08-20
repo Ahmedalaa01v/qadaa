@@ -159,7 +159,7 @@ export default function ResetPasswordPage() {
 
               <Button onClick={handleResendRecovery} disabled={resendLoading} className="w-full gap-2">
                 {resendLoading && <LoadingSpinner size="small" />}
-                {resendLoading ? 'جارٍ الإرسال...' : 'إرسال رابط جديد'}
+                {resendLoading ? 'جاري الإرسال...' : 'إرسال رابط جديد'}
               </Button>
 
               <div className="text-center">
@@ -249,7 +249,7 @@ export default function ResetPasswordPage() {
               className="w-full gap-2"
             >
               {loading && <LoadingSpinner size="small" />}
-              {loading ? 'جارٍ التحديث...' : 'تحديث كلمة المرور'}
+              {loading ? 'جاري التحديث...' : 'تحديث كلمة المرور'}
             </Button>
 
             <div className="text-center">

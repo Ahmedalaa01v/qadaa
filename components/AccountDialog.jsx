@@ -286,14 +286,14 @@ export default function AccountDialog() {
   }
 
   if (user) {
+    const emailInitial = (user?.email?.[0] || user?.user_metadata?.full_name?.[0] || 'U').toUpperCase()
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="ghost" size="sm" className="gap-2">
-            <User className="w-4 h-4" />
-            <span className="max-w-32 truncate">
-              {user.user_metadata?.full_name || user.email}
-            </span>
+            <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center uppercase text-xs">
+              {emailInitial}
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-64" align="end">
@@ -334,7 +334,7 @@ export default function AccountDialog() {
               className="gap-2"
             >
               {loading ? <LoadingSpinner size="small" /> : <LogOut className="w-4 h-4" />}
-              {loading ? 'جار تسجيل الخروج...' : 'تسجيل الخروج'}
+              {loading ? 'جاري تسجيل الخروج...' : 'تسجيل الخروج'}
             </Button>
           </div>
         </PopoverContent>
@@ -450,7 +450,7 @@ export default function AccountDialog() {
               >
                 {loading && <LoadingSpinner size="small" />}
                 {loading ? (
-                  'جارٍ المعالجة...'
+                  'جاري المعالجة...'
                 ) : signInAttempts >= 3 ? (
                   'حاول لاحقاً'
                 ) : authMode === 'signIn' ? (
@@ -543,7 +543,7 @@ export default function AccountDialog() {
                   size="sm"
                 >
                   {resetLoading && <LoadingSpinner size="small" />}
-                  {resetLoading ? 'جارٍ الإرسال...' : 'إرسال'}
+                  {resetLoading ? 'جاري الإرسال...' : 'إرسال'}
                 </Button>
               </div>
             </>

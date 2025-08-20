@@ -355,7 +355,7 @@ const QadaTracker = memo(function QadaTracker() {
 
   // Memoize the rendered days array to prevent unnecessary re-renders
   const renderedDays = React.useMemo(() => {
-    const maxDays = showAllDays ? totalDays : Math.min(totalDays, 500)
+    const maxDays = showAllDays ? totalDays : Math.min(totalDays, 300)
     return Array.from({ length: maxDays }, (_, index) => {
       const dayNumber = index + 1
       const isComplete = isDayComplete(dayNumber)
@@ -441,7 +441,7 @@ const QadaTracker = memo(function QadaTracker() {
               inline: 'nearest'
             })
           }
-        }, 100)
+        }, 150)
       }
     }
   }, [loading, totalDays, findFirstIncompleteDay])
@@ -500,10 +500,10 @@ const QadaTracker = memo(function QadaTracker() {
         {renderedDays}
       </div>
       
-      {totalDays > 500 && !showAllDays && (
+      {totalDays > 300 && !showAllDays && (
         <div className="text-center p-4 bg-muted/30 rounded-lg">
           <p className="text-sm text-muted-foreground mb-3">
-            عرض أول 500 يوم لتحسين الأداء
+            عرض أول 300 يوم لتحسين الأداء
           </p>
           <Button 
             variant="outline" 

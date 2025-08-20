@@ -13,6 +13,8 @@ export default function Progress() {
   const [totalDays, setTotalDays] = useState(0)
   const [loading, setLoading] = useState(true)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [completedDays, setCompletedDays] = useState(0)
+  const [completedPrayers, setCompletedPrayers] = useState(0)
 
   const loadData = useCallback(async () => {
     if (isInitialized) return // Prevent re-initialization
@@ -28,10 +30,10 @@ export default function Progress() {
         return
       }
 
-      // Load settings
+      // Load settings (select only needed columns)
       const { data: settingsData, error: settingsError } = await supabase
         .from('qada_settings')
-        .select('*')
+        .select('start_date, end_date, number_of_days')
         .eq('user_id', user.id)
         .maybeSingle()
 
@@ -50,24 +52,37 @@ export default function Progress() {
         }
         setTotalDays(days)
 
-        // Load progress
+        // Load progress summary (select only needed columns)
         const { data: progressData, error: progressError } = await supabase
           .from('qada_progress')
-          .select('*')
+          .select('day_number, fajr_completed, dhuhr_completed, asr_completed, maghrib_completed, isha_completed')
           .eq('user_id', user.id)
           .order('day_number', { ascending: true })
 
         if (progressError) throw progressError
 
-        // Convert array to object for easier lookup
+        // Convert array to object and compute aggregates in a single pass
         const progressMap = {}
+        let daysCompletedCounter = 0
+        let prayersCompletedCounter = 0
         progressData?.forEach(day => {
           progressMap[day.day_number] = day
+          const dayCount = (day.fajr_completed ? 1 : 0)
+            + (day.dhuhr_completed ? 1 : 0)
+            + (day.asr_completed ? 1 : 0)
+            + (day.maghrib_completed ? 1 : 0)
+            + (day.isha_completed ? 1 : 0)
+          prayersCompletedCounter += dayCount
+          if (dayCount === 5) daysCompletedCounter += 1
         })
         setProgress(progressMap)
+        setCompletedDays(daysCompletedCounter)
+        setCompletedPrayers(prayersCompletedCounter)
       } else {
         setTotalDays(0)
         setProgress({})
+        setCompletedDays(0)
+        setCompletedPrayers(0)
       }
     } catch (error) {
       toast.error('فشل في تحميل بيانات التقدم')
@@ -117,24 +132,6 @@ export default function Progress() {
     }
   }, [loadData, isInitialized])
 
-  const isDayComplete = (dayNumber) => {
-    const dayProgress = progress[dayNumber]
-    if (!dayProgress) return false
-    return ['fajr_completed', 'dhuhr_completed', 'asr_completed', 'maghrib_completed', 'isha_completed']
-      .every(key => dayProgress[key])
-  }
-
-  const getCompletedDays = () => {
-    return Object.keys(progress).filter(day => isDayComplete(day)).length
-  }
-
-  const getCompletedPrayers = () => {
-    return Object.values(progress).reduce((total, day) => {
-      return total + ['fajr_completed', 'dhuhr_completed', 'asr_completed', 'maghrib_completed', 'isha_completed']
-        .filter(key => day[key]).length
-    }, 0)
-  }
-
   const getTotalPrayers = () => totalDays * 5
 
   if (loading) {
@@ -162,8 +159,6 @@ export default function Progress() {
     )
   }
 
-  const completedDays = getCompletedDays()
-  const completedPrayers = getCompletedPrayers()
   const totalPrayers = getTotalPrayers()
   const dayCompletionPercentage = totalDays > 0 ? (completedDays / totalDays) * 100 : 0
   const prayerCompletionPercentage = totalPrayers > 0 ? (completedPrayers / totalPrayers) * 100 : 0
