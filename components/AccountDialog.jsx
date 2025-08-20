@@ -146,7 +146,7 @@ export default function AccountDialog() {
         email: email.trim(),
         password: password,
         options: {
-          emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : undefined
+          emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined
         }
       })
 
@@ -237,7 +237,7 @@ export default function AccountDialog() {
     setResetLoading(true)
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${window.location.origin}/auth/confirm?next=/reset-password`,
       })
 
       if (error) {
@@ -285,13 +285,12 @@ export default function AccountDialog() {
   }
 
   if (user) {
-    const emailInitial = (user?.email?.[0] || user?.user_metadata?.full_name?.[0] || 'U').toUpperCase()
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="ghost" size="sm" className="gap-2">
-            <div className="w-6 h-6 rounded-full bg-primary/10 text-primary/90 flex items-center justify-center uppercase text-xs">
-              {emailInitial}
+            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+              <User className="w-3.5 h-3.5 text-primary" />
             </div>
           </Button>
         </PopoverTrigger>
@@ -330,7 +329,7 @@ export default function AccountDialog() {
               size="sm"
               onClick={handleSignOut}
               disabled={loading}
-              className="gap-2"
+              className={`gap-2 ${loading ? 'pointer-events-none opacity-70' : ''}`}
             >
               {loading ? <LoadingSpinner size="small" /> : <LogOut className="w-4 h-4" />}
               {loading ? 'جاري تسجيل الخروج...' : 'تسجيل الخروج'}
@@ -411,14 +410,14 @@ export default function AccountDialog() {
                 </div>
               </div>
 
-              {/* Email Sent Alert */}
+              {/* Email Sent Alert (also used for forgot-password mobile UX) */}
               {showEmailSentAlert && (
                 <Alert className="p-4 bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 border border-yellow-200 dark:border-yellow-800">
                   <AlertTitle className="text-yellow-800 dark:text-yellow-400 font-medium">
-                    تم إرسال رابط التأكيد
+                    تحقق من بريدك الإلكتروني
                   </AlertTitle>
                   <AlertDescription className="text-yellow-700 dark:text-yellow-300 text-xs mt-1">
-                    يرجى التحقق من بريدك الإلكتروني وتأكيد الحساب، ثم المحاولة مرة أخرى.
+                    قم بفتح البريد الوارد واضغط على الرابط لإكمال العملية.
                   </AlertDescription>
                 </Alert>
               )}
@@ -536,7 +535,10 @@ export default function AccountDialog() {
                   إلغاء
                 </Button>
                 <Button 
-                  onClick={handleForgotPassword}
+                  onClick={async () => {
+                    await handleForgotPassword()
+                    setShowEmailSentAlert(true)
+                  }}
                   disabled={resetLoading}
                   className="flex-1 gap-2"
                   size="sm"

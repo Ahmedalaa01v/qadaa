@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
-import { Lock, Eye, EyeOff, Mail } from 'lucide-react'
+import { Lock, Eye, EyeOff, Mail, Info } from 'lucide-react'
 import { toast } from 'sonner'
 import LoadingSpinner from '@/components/ui/loading-spinner'
 import Navbar from '@/components/Navbar'
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
     setResendLoading(true)
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(recoveryEmail, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: `${window.location.origin}/auth/confirm?next=/reset-password`
       })
       if (error) throw error
       toast.success('تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني')
@@ -137,6 +137,13 @@ export default function ResetPasswordPage() {
             <div className="text-center space-y-2">
               <h1 className="text-2xl font-bold">رابط غير صالح أو منتهي</h1>
               <p className="text-muted-foreground text-sm">يمكنك طلب رابط جديد لإعادة تعيين كلمة المرور</p>
+            </div>
+
+            <div className="flex items-start gap-2 rounded-md border border-yellow-300 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950/20 p-3 text-right">
+              <Info className="w-4 h-4 text-yellow-700 mt-0.5" />
+              <p className="text-xs text-yellow-800 dark:text-yellow-300">
+                إذا كنت قد ضغطت للتو على الرابط من بريدك الإلكتروني ولم تظهر هذه الصفحة تلقائياً، حاول إعادة فتح الرابط داخل المتصفح الافتراضي للهاتف.
+              </p>
             </div>
 
             <div className="space-y-3">
