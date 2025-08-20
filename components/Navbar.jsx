@@ -46,8 +46,13 @@ export default function Navbar() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Lightweight UI update without full reload
+      // Update local state
       setUser(session?.user || null)
+
+      // Force a full reload on sign-in/sign-up to mirror logout behavior
+      if ((event === 'SIGNED_IN' || event === 'SIGNED_UP') && typeof window !== 'undefined') {
+        setTimeout(() => window.location.reload(), 50)
+      }
     })
 
     return () => subscription.unsubscribe()
