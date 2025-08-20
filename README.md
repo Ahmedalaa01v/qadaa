@@ -1,69 +1,63 @@
-# قليل دائم - Little but Continuous
+# قضاء الصلوات - Qada Prayer Tracker
 
-<div align="center">
+Qada Prayer Tracker helps you plan and complete missed daily prayers in an organized, trackable way. The app provides an Arabic-first interface, clear progress tracking, and a concise guidance page summarizing widely accepted fiqh positions without quoting primary texts.
 
-**"قليل دائم خير من كثير منقطع"**
+## 📘 Ruling Overview (from `app/ruling/page.js`)
 
-*A small but continuous effort is better than a large but intermittent one.*
+The `/ruling` page provides a concise summary based on mainstream fiqh:
 
-**Built for the sake of Allah SWT • بُني لله سبحانه وتعالى**
-
----
-
-*"وَقُل رَّبِّ زِدْنِي عِلْماً"* - **"And say: My Lord, increase me in knowledge"** (Quran 20:114)
-
-</div>
+- The majority view across the four Sunni schools is that missed obligatory prayers must be made up.
+- If many prayers are missed, plan a steady routine and continue until completion.
+- Recommended sequencing: follow chronological order when feasible; if current prayer time risks ending, perform the current prayer first, then continue Qada.
+- The page uses neutral language and avoids quoting primary texts directly. It aims to guide planning and consistency, not replace scholarly study.
 
 ## 🎯 Purpose & Vision
 
-**Qaleel Daim** is more than just a time tracker—it's a spiritual and practical tool designed to help you build consistency in your daily actions for the sake of Allah. Based on the profound Islamic wisdom that **"small but consistent actions are better than large but intermittent ones,"** this application encourages daily dedication to personal growth, worship, learning, and meaningful work.
+**Qada Tracker** is a specialized Islamic application designed to help Muslims systematically track and make up their missed prayers (Qada). Based on the Islamic principle that **"prayer is never dropped and must always be made up,"** this application provides a structured approach to fulfilling this religious obligation.
 
-### The Philosophy Behind قليل دائم
-
-In Islam, consistency in good deeds is highly valued. The Prophet Muhammad ﷺ said:
-
-> *"أحب الأعمال إلى الله أدومها وإن قل"*
->
-> **"The most beloved of deeds to Allah are those that are most consistent, even if they are few."** - Sahih Bukhari
-
-This application embodies this teaching by:
-- **Encouraging daily consistency** over sporadic bursts of activity
-- **Visualizing progress** through a beautiful heatmap like GitHub's contribution graph
-- **Making accountability easy** with simple timer-based tracking
-- **Building lasting habits** that benefit both this life and the hereafter
+This application supports users with:
+- **Systematic tracking** of missed prayers by day and type
+- **Progress visualization** to maintain motivation
+- **Guidance summary** on methods and common rulings
+- **Structured approach** to complete large numbers of missed prayers
 
 ## ✨ Features
 
-### 🕐 **Minimal Timer Interface**
-- Clean, distraction-free 25-minute Pomodoro timer
-- Large, easy-to-read display using IBM Plex Mono font
-- Simple start/pause/reset controls
-- Automatic session tracking and storage
+### 🕌 **Prayer Tracking System**
+- Track missed prayers by day: Fajr, Dhuhr, Asr, Maghrib, Isha
+- Mark individual prayers as completed
+- Support for both date range and number of days methods
+- Automatic progress calculation and statistics
 
-### 📊 **GitHub-Style Heatmap**
-- Visual representation of your daily consistency
-- Hover over any day to see exact work duration
-- Beautiful gradient showing intensity levels (0-5)
-- Full year overview to track long-term progress
+### 📊 **Progress Visualization**
+- Daily progress tracking with completion percentages
+- Visual indicators for completed vs remaining prayers
+- Statistical overview of total progress
+- Motivation through visual achievement
 
-### 👤 **Seamless Google Authentication**
-- One-click sign-in with Google
-- Persistent sessions (maintained for a full year)
-- Secure user data isolation
-- Beautiful Arabic-first interface
+### 🔐 **Secure Authentication**
+- Email-based authentication via Supabase
+- Password reset functionality
+- Secure user data isolation with Row Level Security (RLS)
+- Session management and persistence
 
-### 🌙 **Beautiful Dark Theme**
-- Supabase-inspired color palette
-- Easy on the eyes for extended use
-- Thoughtfully designed Arabic typography
+### 🌙 **Beautiful Islamic Interface**
+- Dark theme optimized for comfortable use
+- Arabic-first design with RTL support
+- Islamic color palette (green accents)
 - Responsive design for all devices
+
+### 📚 **Guidance Overview**
+- Ruling page (`/ruling`) summarizing mainstream views on making up missed prayers
+- High-level overview reflecting the position of the four major Sunni schools that making up missed obligatory prayers is required
+- Practical guidance for planning and sequencing Qada
+- Neutral, concise explanations (no direct quotations from primary texts)
 
 ### 🏛️ **Arabic-First Design**
 - Primary font: IBM Plex Sans Arabic
-- Header font: Aref Ruqaa (Google Fonts)
-- Timer font: IBM Plex Mono
+- Header font: Aref Ruqaa (traditional Arabic calligraphy)
 - RTL (Right-to-Left) layout support
-- Culturally appropriate UI elements
+- Culturally appropriate Islamic UI elements
 
 ## 🚀 Getting Started
 
@@ -77,8 +71,8 @@ Before you begin, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/qaleel-daim.git
-cd qaleel-daim
+git clone https://github.com/yourusername/qada-tracker.git
+cd qada-tracker
 ```
 
 ### 2. Install Dependencies
@@ -91,98 +85,109 @@ npm install
 
 1. Create a new project at [supabase.com](https://supabase.com)
 2. Go to the SQL Editor in your Supabase dashboard
-3. Copy and paste the content from `supabase-setup.sql`
-4. Run the SQL script to create tables and policies
+3. Copy and paste the content from `schema.sql`
+4. Run the SQL script to create tables, policies, and functions
 
-### 4. Configure Google OAuth
-
-1. Go to the [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select an existing one
-3. Enable the Google+ API
-4. Create OAuth 2.0 credentials
-5. Add authorized redirect URIs:
-   - `http://localhost:3000/auth/callback` (development)
-   - `https://yourdomain.com/auth/callback` (production)
-
-### 5. Configure Supabase Authentication
+### 4. Configure Supabase Authentication
 
 1. In your Supabase dashboard, go to Authentication > Settings
-2. Enable Google as a provider
-3. Add your Google OAuth credentials
-4. Set the Site URL to your domain
+2. Configure email authentication settings
+3. Set up redirect URLs for password reset:
+   - `http://localhost:3000/reset-password` (development)
+   - `https://yourdomain.com/reset-password` (production)
+4. Enable "Confirm email" if desired for additional security
 
-### 6. Environment Variables
+### 5. Environment Variables
 
 Create a `.env.local` file in the root directory:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Replace the values with your actual Supabase project URL and anon key.
+Replace the values with your actual Supabase project URL and anon key. You can find these in your Supabase project settings → API.
 
-### 7. Run the Development Server
+### 6. Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser and start tracking your Qada prayers!
 
 ## 🏗️ Architecture
 
 ### Tech Stack
 
 - **Framework**: Next.js 15 with App Router
-- **Styling**: Tailwind CSS with custom Arabic fonts
+- **Styling**: Tailwind CSS with Arabic-first typography
 - **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth with Google OAuth
+- **Authentication**: Supabase Auth (email-based)
 - **UI Components**: Radix UI primitives
-- **Date Handling**: date-fns with Arabic locale support
+- **Date Handling**: date-fns
 
 ### Project Structure
 
 ```
-qaleel-daim/
+qadaa/
 ├── app/
-│   ├── layout.js          # Root layout with Arabic fonts
-│   ├── page.js            # Main application page
-│   └── globals.css        # Global styles and theme
+│   ├── layout.js            # Root layout with Arabic fonts
+│   ├── page.js              # Main application page
+│   ├── reset-password/      # Password reset page
+│   ├── ruling/              # Islamic ruling page
+│   ├── robots.js            # SEO robots configuration
+│   ├── sitemap.js           # SEO sitemap generation
+│   └── globals.css          # Global styles and theme
 ├── components/
-│   ├── ui/
-│   │   ├── button.jsx     # Reusable button component
-│   │   └── dialog.jsx     # Modal dialog component
-│   ├── Timer.jsx          # Pomodoro timer component
-│   ├── Heatmap.jsx        # GitHub-style progress heatmap
-│   └── AccountDialog.jsx  # Authentication modal
+│   ├── ui/                  # Reusable UI components
+│   │   ├── button.jsx       # Button component
+│   │   ├── dialog.jsx       # Modal dialog component
+│   │   ├── progress.jsx     # Progress bar component
+│   │   └── ...              # Other UI components
+│   ├── QadaTracker.jsx      # Main prayer tracking component
+│   ├── AccountDialog.jsx    # Authentication modal
+│   ├── Navbar.jsx           # Navigation component
+│   ├── Footer.jsx           # Footer component
+│   └── Settings.jsx         # Settings configuration
 ├── lib/
-│   ├── utils.js           # Utility functions
-│   └── supabase.js        # Supabase client and helpers
-└── supabase-setup.sql     # Database schema and policies
+│   ├── utils.js             # Utility functions
+│   └── supabase.js          # Supabase client and helpers
+├── schema.sql               # Database schema and policies
+└── DEPLOYMENT.md            # Comprehensive deployment guide
 ```
 
 ### Database Schema
 
-The application uses a single main table:
+The application uses two main tables:
 
-**`work_sessions`**
+**`qada_settings`**
 - `id` (UUID, Primary Key)
 - `user_id` (UUID, Foreign Key to auth.users)
-- `date` (DATE, Unique per user)
-- `duration_minutes` (INTEGER)
-- `created_at` (TIMESTAMP)
-- `updated_at` (TIMESTAMP)
+- `start_date` / `end_date` (DATE, for date range method)
+- `number_of_days` (INTEGER, for days count method)
+- `created_at` / `updated_at` (TIMESTAMP)
+
+**`qada_progress`**
+- `id` (UUID, Primary Key)
+- `user_id` (UUID, Foreign Key to auth.users)
+- `day_number` (INTEGER, day sequence)
+- `fajr_completed` / `dhuhr_completed` / `asr_completed` / `maghrib_completed` / `isha_completed` (BOOLEAN)
+- `created_at` / `updated_at` (TIMESTAMP)
+
+**`user_qada_stats`** (View)
+- Automatically calculates completion statistics per user
 
 ## 🎨 Design Philosophy
 
 ### Arabic Typography Hierarchy
 
-1. **Header**: Aref Ruqaa - Traditional Arabic calligraphy style
+1. **Header**: Aref Ruqaa - Traditional Arabic calligraphy style for Islamic elegance
 2. **Body Text**: IBM Plex Sans Arabic - Modern, readable Arabic font
-3. **Timer**: IBM Plex Mono - Monospace for consistent digit alignment
+3. **UI Elements**: Clean, minimalist design respecting Islamic aesthetics
 
-### Color Palette (Supabase-Inspired)
+### Islamic Color Palette
 
 - **Background**: `#0a0a0a` - Deep black for minimal distraction
 - **Primary**: `#3ecf8e` - Calming green representing growth
@@ -191,39 +196,19 @@ The application uses a single main table:
 
 ### UI/UX Principles
 
-- **Minimalism**: Remove all distractions to focus on the task
-- **Clarity**: Large, clear typography and generous whitespace
+- **Simplicity**: Clean interface to focus on the spiritual act of Qada
 - **Accessibility**: High contrast and keyboard navigation support
 - **Cultural Sensitivity**: RTL layout and Arabic-first design
+- **Islamic Aesthetics**: Respectful design appropriate for religious use
 
-## 🤲 Spiritual Significance
+## 📘 Ruling Overview (from `app/ruling/page.js`)
 
-### Daily Consistency (الاستمرارية اليومية)
+The `/ruling` page provides a concise summary based on mainstream fiqh:
 
-The act of showing up every day, even for a short time, builds discipline (`تهذيب النفس`) and helps develop beneficial habits. In Islam, small consistent actions are preferred over large inconsistent ones.
-
-### Seeking Knowledge (طلب العلم)
-
-Whether you're using this timer for:
-- Reading Quran and Islamic texts
-- Learning new skills
-- Working on beneficial projects
-- Personal development
-
-Remember that seeking beneficial knowledge is an act of worship in Islam.
-
-### Accountability (المحاسبة)
-
-The heatmap serves as a visual reminder of your commitment and helps with self-accountability, which is encouraged in Islamic teachings.
-
-### Intention (النية)
-
-Before starting each session, make your intention clear. Are you:
-- Seeking Allah's pleasure?
-- Benefiting yourself and others?
-- Contributing positively to society?
-
-The Prophet ﷺ said: *"Actions are but by intention."*
+- The majority view across the four Sunni schools is that missed obligatory prayers must be made up.
+- If many prayers are missed, plan a steady routine and continue until completion.
+- Recommended sequencing: follow chronological order when feasible; if current prayer time risks ending, perform the current prayer first, then continue Qada.
+- The page uses neutral language and avoids quoting primary texts directly. It aims to guide planning and consistency, not replace scholarly study.
 
 ## 🛠️ Development
 
@@ -250,9 +235,10 @@ npm run lint
 
 The application is fully responsive and works beautifully on:
 - Desktop computers
-- Tablets (iPad, Android tablets)
+- Tablets (iPad, Android tablets)  
 - Mobile phones (iPhone, Android)
-- Progressive Web App (PWA) support coming soon إن شاء الله
+- PWA (Progressive Web App) support with manifest.json
+- Offline-capable for uninterrupted worship tracking
 
 ## 🔐 Privacy & Security
 
@@ -264,7 +250,7 @@ The application is fully responsive and works beautifully on:
 
 ## 🌟 Contributing
 
-This project is built with love for the sake of Allah. If you'd like to contribute:
+This project is built for the sake of Allah to help the Muslim Ummah. If you'd like to contribute:
 
 1. Fork the repository
 2. Create a feature branch
@@ -272,23 +258,19 @@ This project is built with love for the sake of Allah. If you'd like to contribu
 4. Test thoroughly
 5. Submit a pull request
 
-Please ensure your contributions align with Islamic values and the project's spiritual purpose.
+Please ensure your contributions:
+- Align with Islamic values and jurisprudence
+- Respect the spiritual purpose of the application
+- Maintain accuracy in Islamic rulings and terminology
+- Follow the code of conduct in CONTRIBUTING.md
 
-## 🤲 Du'a (Prayer)
+See CONTRIBUTING.md for detailed guidelines.
 
-Before you start your session, consider this du'a:
+## ℹ️ Notes and Scope
 
-**Arabic:**
-```
-اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا، وَقِنَا عَذَابَ النَّارِ
-رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي
-```
-
-**Translation:**
-```
-"O Allah, bless us in what You have provided for us, and protect us from the punishment of the Fire.
-My Lord, expand my chest and ease my task for me."
-```
+- This application provides tooling for planning and tracking Qada prayers.
+- The `/ruling` page offers a high-level summary to help users plan; it does not provide fatwas or scholarly citations.
+- Users with complex circumstances should consult qualified scholars locally.
 
 ## 📄 License
 
@@ -308,8 +290,15 @@ This project is dedicated to Allah SWT and is available under the MIT License. F
 
 **May Allah accept our efforts and make them beneficial • آمين**
 
-**Built with ❤️ for the sake of Allah • بُني بحب لله سبحانه وتعالى**
+**Open Source**: This project is MIT-licensed and welcomes contributions.
 
-*"And it is He who created the heavens and earth in truth. And the day He says, 'Be,' and it is, His word is the truth."* - Quran 6:73
+---
+
+### 🔗 Useful Links
+
+- **Live Demo**: [qadaa.org](https://qadaa.org)
+- **Islamic Rulings**: [qadaa.org/ruling](https://qadaa.org/ruling)
+- **Deployment Guide**: [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 </div>
