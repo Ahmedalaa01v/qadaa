@@ -13,7 +13,7 @@ The `/ruling` page provides a concise summary based on mainstream fiqh:
 
 ## 🎯 Purpose & Vision
 
-**Qada Tracker** is a specialized Islamic application designed to help Muslims systematically track and make up their missed prayers (Qada). Based on the Islamic principle that **"prayer is never dropped and must always be made up,"** this application provides a structured approach to fulfilling this religious obligation.
+**Qada Tracker** is a specialized Islamic application designed to help Muslims systematically track and make up their missed prayers (Qada). Based on the Islamic principles this application provides a structured approach to fulfilling this religious obligation.
 
 This application supports users with:
 - **Systematic tracking** of missed prayers by day and type
