@@ -33,11 +33,16 @@ export default function ResetPasswordPage() {
       }
     })
 
-    // 2) Fallback: check current session (user opened link and session already set)
+    // 2) Fallback: check current session via server to ensure cookies are considered
     const init = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session && !didSet) {
+        const params = new URLSearchParams(window.location.search)
+        const verified = params.get('verified') === '1'
+
+        // Prefer server cookie check; verified flag helps on first load
+        const res = await fetch('/auth/session', { cache: 'no-store' })
+        const ok = res.ok
+        if ((ok || verified) && !didSet) {
           setStatus('form')
           return
         }
@@ -73,13 +78,12 @@ export default function ResetPasswordPage() {
 
     setLoading(true)
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
+      const res = await fetch('/auth/update-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword })
       })
-
-      if (error) {
-        throw error
-      }
+      if (!res.ok) throw new Error('update_failed')
 
       toast.success('تم تغيير كلمة المرور بنجاح')
       
