@@ -5,29 +5,58 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request) {
-  const url = new URL(request.url)
-  const token_hash = url.searchParams.get('token_hash')
-  const type = url.searchParams.get('type')
-  const nextParamRaw = url.searchParams.get('next') || '/reset-password'
-  let nextPath = '/reset-password'
-  try {
-    const decoded = decodeURIComponent(nextParamRaw)
-    if (decoded.startsWith('/')) {
-      nextPath = decoded
+  const requestUrl = new URL(request.url)
+  const tokenHash = requestUrl.searchParams.get('token_hash')
+  const rawType = requestUrl.searchParams.get('type') || ''
+  const type = rawType.toLowerCase()
+  const nextParamRaw = requestUrl.searchParams.get('next') || ''
+
+  // Determine safe redirect target
+  let redirectPathname = '/'
+  const initialParams = new URLSearchParams()
+
+  if (nextParamRaw) {
+    try {
+      const decoded = decodeURIComponent(nextParamRaw)
+      if (decoded.startsWith('/')) {
+        // Parse next to extract pathname and query separately
+        const parsed = new URL(decoded, requestUrl.origin)
+        redirectPathname = parsed.pathname
+        parsed.searchParams.forEach((value, key) => initialParams.set(key, value))
+      }
+      // Ignore absolute URLs to avoid malformed paths like "/https:/..." and open redirects
+    } catch {
+      // Keep defaults if decode/parse fails
     }
-    // Ignore absolute URLs to avoid malformed paths like "/https:/..." and open redirects
-  } catch {
-    // keep default
+  } else {
+    // Fallbacks based on verification type
+    switch (type) {
+      case 'recovery':
+        redirectPathname = '/reset-password'
+        break
+      case 'email_change':
+        redirectPathname = '/'
+        initialParams.set('email_change', '1')
+        break
+      default:
+        // signup/email/invite/magiclink → home
+        redirectPathname = '/'
+        break
+    }
   }
 
   const redirectUrl = new URL(request.url)
-  redirectUrl.pathname = nextPath
-  redirectUrl.search = ''
+  redirectUrl.pathname = redirectPathname
+  redirectUrl.search = initialParams.toString()
 
-  if (token_hash && type) {
+  // Map legacy/templated types to Supabase verifyOtp accepted values
+  // Supabase accepts: 'signup' | 'invite' | 'recovery' | 'magiclink' | 'email_change'
+  const verifyType = type === 'email' || type === '' ? 'signup' : type
+
+  if (tokenHash && verifyType) {
     const cookieStore = await cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+    const { error } = await supabase.auth.verifyOtp({ type: verifyType, token_hash: tokenHash })
 
     if (!error) {
       redirectUrl.searchParams.set('verified', '1')
@@ -35,7 +64,7 @@ export async function GET(request) {
     }
   }
 
-  // If verification fails, still send user to reset page where the UI handles invalid state
+  // If verification fails, still send user to the computed destination where UI handles invalid state
   return NextResponse.redirect(redirectUrl)
 }
 

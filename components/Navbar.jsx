@@ -85,7 +85,7 @@ export default function Navbar() {
 
   return (
     <header className="w-full p-6 flex items-center justify-between">
-      <h1 className="text-xl font-arabic font-normal tracking-wide" style={{ color: '#A0A0A0' }}>
+      <h1 className="text-lg sm:text-xl font-arabic font-normal tracking-wide" style={{ color: '#A0A0A0' }}>
         <Link href="/" className="no-underline">قضاء الصلوات</Link>
       </h1>
       <div className="flex items-center gap-3">
