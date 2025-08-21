@@ -457,7 +457,7 @@ const QadaTracker = memo(function QadaTracker() {
   if (!user) {
     return (
       <div className="text-center space-y-4 py-20">
-        <div className="text-muted-foreground">
+        <div className="" style={{ color: '#A1A1A1' }}>
           <h2 className="text-2xl font-semibold mb-2">مرحباً بك في تطبيق قضاء الصلوات</h2>
           <p>سجل دخولك لبدء تتبع قضاء الصلوات</p>
         </div>
