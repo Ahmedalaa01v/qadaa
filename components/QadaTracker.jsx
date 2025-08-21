@@ -27,6 +27,7 @@ const QadaTracker = memo(function QadaTracker() {
   const [isInitialized, setIsInitialized] = useState(false)
   const [isTabVisible, setIsTabVisible] = useState(true)
   const gridRef = useRef(null)
+  const hasAutoScrolledRef = useRef(false)
   const [showAllDays, setShowAllDays] = useState(false)
 
   // Handle tab visibility changes
@@ -382,7 +383,7 @@ const QadaTracker = memo(function QadaTracker() {
               className={`gap-1 text-xs px-2 py-1 h-7 ${isComplete ? 'bg-green-600 hover:bg-green-600' : ''}`}
             >
               <Check className="w-3 h-3" />
-              {isComplete ? 'مكتمل' : 'تمام'}
+              {isComplete ? 'مكتمل' : 'تم'}
             </Button>
           </div>
 
@@ -403,7 +404,7 @@ const QadaTracker = memo(function QadaTracker() {
                     onClick={() => togglePrayer(dayNumber, prayerField)}
                     className={`w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
                       isCompleted
-                        ? 'bg-green-500 border-green-600 text-white'
+                        ? 'bg-green-500  border-green-600 text-white' 
                         : 'bg-muted border-border hover:border-primary/50'
                     }`}
                     title={`${prayerName} - ${isCompleted ? 'مكتملة' : 'غير مكتملة'}`}
@@ -417,17 +418,15 @@ const QadaTracker = memo(function QadaTracker() {
             })}
           </div>
 
-          {/* Progress indicator for this day */}
-          <div className="mt-3 text-xs text-muted-foreground text-center">
-            {PRAYER_KEYS.filter(key => getPrayerStatus(dayNumber, key)).length}/5 صلوات
-          </div>
+          
         </div>
       )
     })
   }, [totalDays, showAllDays, isDayComplete, getPrayerStatus, togglePrayer, markDayComplete])
 
-  // Auto-scroll to first incomplete day when data loads
+  // Auto-scroll to first incomplete day only once per page load
   useEffect(() => {
+    if (hasAutoScrolledRef.current) return
     if (!loading && totalDays > 0 && gridRef.current) {
       const firstIncompleteDay = findFirstIncompleteDay()
       if (firstIncompleteDay) {
@@ -443,6 +442,7 @@ const QadaTracker = memo(function QadaTracker() {
           }
         }, 150)
       }
+      hasAutoScrolledRef.current = true
     }
   }, [loading, totalDays, findFirstIncompleteDay])
 
