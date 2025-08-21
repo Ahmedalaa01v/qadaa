@@ -49,9 +49,8 @@ export async function GET(request) {
   redirectUrl.pathname = redirectPathname
   redirectUrl.search = initialParams.toString()
 
-  // Map legacy/templated types to Supabase verifyOtp accepted values
-  // Supabase accepts: 'signup' | 'invite' | 'recovery' | 'magiclink' | 'email_change'
-  const verifyType = type === 'email' || type === '' ? 'signup' : type
+  // Use the raw type from URL (e.g., 'email', 'recovery', 'invite', 'magiclink', 'email_change')
+  const verifyType = type
 
   if (tokenHash && verifyType) {
     const cookieStore = await cookies()
